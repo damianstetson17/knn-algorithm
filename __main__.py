@@ -1,28 +1,30 @@
 # pip install numpy
+# pip install matplotlib
 
 from knn import Knn
+from csv import reader
 from typing import List
 from model.data import Data
 
-
 def main ():
-    #NOT WORKING
-    DataSet : List[Data] = []
-    #print("# Loading data from txt:\t\t     #")
-    data_file_txt = open("data_r2.txt", "r")
-    for data in data_file_txt.readlines():
-        vectorString = ""
-        for caracter in enumerate(data[0:],2):
-            if(caracter[1] == ","):
-                vectorString+=" " 
-            else:
-                vectorString+=caracter[1]
-        vector = vectorString.split()
-        DataSet.append(
-            Data( float(vector[0]), float(vector[1]), int(vector[2]) )
-        )
-    data_file_txt.close()
-    knnAlgorithm = Knn(DataSet,10)
+    with open('./dataSets/aggregation.txt', 'r') as read_dataSet:
+        DataSet : List[Data] = []
+        csv_reader = reader(read_dataSet)
+
+        # Iterate over each row in the csv using reader object
+        for row in csv_reader:
+            dataListRow = row[0].split()
+            DataSet.append(
+                Data(
+                    float(dataListRow[0]),
+                    float(dataListRow[1]),
+                    int(dataListRow[2])
+                )
+            )
+            #print(f"dataset size: {len(DataSet)}")
+    #start algorithm
+    knnAlgorithm = Knn(DataSet,3)
+    knnAlgorithm.GenerateGrid()
 
 if __name__ == '__main__':
     main()

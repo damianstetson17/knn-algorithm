@@ -11,66 +11,93 @@ class Knn:
         self.kNeighborsNumber : int = kNeighborsNumber
     
     def euclideanDist(self, x1:float, y1:float, x2:float, y2:float) -> float:
-        return math.sqrt(
+        return round(
+                math.sqrt(
                             ( (x2-x1)**2 ) + ( (y2-y1)**2 )
-                        )
+                        ),2)
     
     def findMinInDataSet(self) -> Data:
-        xArrayPoints = [x[0] for x in self.dataSet]
-        yArrayPoints = [y[1] for y in self.dataSet]
+        xArrayPoints = [d.x for d in self.dataSet]
+        yArrayPoints = [d.y for d in self.dataSet]
 
         return Data(min(xArrayPoints), min(yArrayPoints))
 
     def findMaxInDataSet(self) -> Data:
-        xArrayPoints = [x[0] for x in self.dataSet]
-        yArrayPoints = [y[1] for y in self.dataSet]
+        xArrayPoints = [d.x for d in self.dataSet]
+        yArrayPoints = [d.y for d in self.dataSet]
 
         return Data(max(xArrayPoints), max(yArrayPoints))
 
-    def findNeighbors(self, GridPoint) -> List[Data]:
-        #get the eculidian distances
+    def findNeighbors(self, GridPoint) -> List[Any]:
+        #get all euclidian distances
         AllEuclideanDistances : List[float]  = [
-                                    self.euclideanDist(GridPoint[0],GridPoint[1], data[0], data[1])
+                                    self.euclideanDist(GridPoint[0],GridPoint[1], data.x, data.y)
                                     for data in self.dataSet
                                     ]
-
+        # we got this:
         # dataset[(x,y,lbl),(xx,yy,lbl2)]
         # eucResult[2,7]
-        # datasWithEucli = ([x,yy,label,2],[xx,yy,lbl2,7])
-        datasWithEucli = numpy.array(self.dataSet, AllEuclideanDistances).sort( key=itemgetter(3))
-
+        # and we need to convert into this:
+        # datasWithEucli = ([data.x, data.y ,data.label, eucDist=2],[...])
+        datasWithEucli = []
+        i=0
+        for data in self.dataSet:
+            datasWithEucli.append( [data.x, data.y, data.label, AllEuclideanDistances[i]] )
+            i=i+1
+        
+        #sort by most nearby eucDist
+        datasWithEucli = sorted(datasWithEucli, key=lambda d : d[3])
         #get only the k number of Neighbors of that min euclidians
+        #print(f"Primeros {self.kNeighborsNumber} vecinos de [{GridPoint[0]},{GridPoint[1]}]: {datasWithEucli[:self.kNeighborsNumber]}")
         return datasWithEucli[:self.kNeighborsNumber]
+
+    def most_frequent(self,List) -> int:
+        counter = 0
+        num = List[0]
+        
+        for i in List:
+            curr_frequency = List.count(i)
+            if(curr_frequency> counter):
+                counter = curr_frequency
+                num = i
+        return num
+
+    def DefineLabel(self, point) -> int:
+        Neighbors : List[Any] = self.findNeighbors(point)
+        labelsExist = [n[2] for n in Neighbors]
+        return self.most_frequent(labelsExist)
 
     def GenerateGrid(self) -> Any:
         #find the min & max
-        CoordMin :Data  = self.findMinInDataSet()
-        CoordMax :Data  = self.findMaxInDataSet()
+        CoordMinData :Data  = self.findMinInDataSet()
+        CoordMaxData :Data  = self.findMaxInDataSet()
 
         #make a range from x & y
-        grid_x_range = numpy.arange(CoordMin[0] - 1, CoordMax[0] + 1)
-        grid_y_range = numpy.arange(CoordMin[1] - 1, CoordMax[1] + 1)
+        grid_x_range = numpy.arange(CoordMinData.x - 1, CoordMaxData.x + 1, 0.5)
+        grid_y_range = numpy.arange(CoordMinData.y - 1, CoordMaxData.y + 1, 0.5)
 
         #return coordinate matrices from coordinate vectors
         grid_x, grid_y = numpy.meshgrid(grid_x_range, grid_y_range)
 
-        NeighborsListLabel : List[Data]
+        NeighborsListLabel : List[Data] = []
         for n in range( len( grid_x.flatten() ) ):
             point = numpy.array( [grid_x.flatten()[n], grid_y.flatten()[n]] )
-            NeighborsListLabel.append( self.findNeighbors(point)[:2] )
+            NeighborsListLabel.append( self.DefineLabel(point) )
 
         #plot
         gridPlot = plt.figure(1)
         plt.scatter(grid_x,grid_y,
                     c = NeighborsListLabel,
-                    alpha = 0.3,
-                    cmap= "Set1")
-
-        plt.scatter(self.dataSet[0],
-                    self.dataSet[1],
-                    c = self.dataSet[2],
-                    alpha = 0.3,
+                    alpha = 0.5,
                     cmap= "Set1",
-                    marker="d")
+                    marker="s",)
+
+        plt.scatter([data.x for data in self.dataSet],
+                    [data.y for data in self.dataSet],
+                    c = [data.label for data in self.dataSet],
+                    alpha = 0.4,
+                    cmap= "Set1",
+                    marker="o",
+                    linewidth=4)
 
         plt.show()
