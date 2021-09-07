@@ -95,9 +95,10 @@ class Knn:
         plt.scatter([data.x for data in self.dataSet],
                     [data.y for data in self.dataSet],
                     c = [data.label for data in self.dataSet],
-                    alpha = 0.4,
+                    alpha = 0.9,
                     cmap= "Set1",
-                    marker="o",
-                    linewidth=4)
+                    marker="x",
+                    linewidths=5,
+                    linewidth=3)
 
         plt.show()
