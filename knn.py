@@ -86,12 +86,14 @@ class Knn:
 
         #plot
         gridPlot = plt.figure(1)
+        #plot grid
         plt.scatter(grid_x,grid_y,
                     c = NeighborsListLabel,
                     alpha = 0.5,
                     cmap= "Set1",
-                    marker="s",)
+                    marker="s")
 
+        #plot dataset
         plt.scatter([data.x for data in self.dataSet],
                     [data.y for data in self.dataSet],
                     c = [data.label for data in self.dataSet],
