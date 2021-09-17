@@ -23,7 +23,7 @@ def main ():
             )
             #print(f"dataset size: {len(DataSet)}")
     #start algorithm
-    knnAlgorithm = Knn(DataSet,10)
+    knnAlgorithm = Knn(DataSet,1)
     knnAlgorithm.GenerateGrid()
 
 if __name__ == '__main__':

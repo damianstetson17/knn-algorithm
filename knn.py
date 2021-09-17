@@ -84,23 +84,44 @@ class Knn:
             point = numpy.array( [grid_x.flatten()[n], grid_y.flatten()[n]] )
             NeighborsListLabel.append( self.DefineLabel(point) )
 
-        #plot
-        gridPlot = plt.figure(1)
+        fig = plt.figure()
+        fig.suptitle(f"KNN con K={self.kNeighborsNumber}")
+        GridAndData = fig.add_subplot(121)
+        Grid = fig.add_subplot(122)
         #plot grid
-        plt.scatter(grid_x,grid_y,
+        GridAndData.scatter(grid_x,grid_y,
                     c = NeighborsListLabel,
-                    alpha = 0.5,
+                    alpha = 0.4,
                     cmap= "Set1",
-                    marker="s")
+                    marker="s",
+                    label="Grilla")
 
         #plot dataset
-        plt.scatter([data.x for data in self.dataSet],
+        GridAndData.scatter([data.x for data in self.dataSet],
                     [data.y for data in self.dataSet],
                     c = [data.label for data in self.dataSet],
                     alpha = 0.9,
                     cmap= "Set1",
                     marker="x",
+                    label="Data Set",
                     linewidths=5,
                     linewidth=3)
 
+        Grid.pcolormesh(grid_x,grid_y,
+                    numpy.asarray(NeighborsListLabel).reshape(grid_x.shape),
+                    shading="auto",
+                    alpha = 1,
+                    cmap= "Set1")
+
+        plt.title(f"KNN con K={self.kNeighborsNumber}")
+
+        GridAndData.set_title('Grilla con Data Set')
+
+        Grid.set_title('Grilla')
+        Grid.set_xlabel('Eje x')
+        Grid.set_ylabel('Eje y')
+        fig.canvas.set_window_title('Inteligencia Artificial II - Gráfico KNN')
+        GridAndData.legend(loc='upper center',
+                   bbox_to_anchor=(0.5, -0.05),
+                   fancybox=True, shadow=True, ncol=5)
         plt.show()
