@@ -28,6 +28,33 @@ class Knn:
 
         return Data(max(xArrayPoints), max(yArrayPoints))
 
+    def findKFoldNeighbors(self, point:Data) -> List[Any]:
+        AllEuclideanDistances : List[float]  = [self.euclideanDist(point.x,
+                                                                   point.y,
+                                                                   data.x,
+                                                                   data.y)for data in self.dataSet]
+        
+        #Unimos las distancias euclidianas de cada punto
+        #con su label y ordenamos por menor eucdist
+        datasWithEucli = []
+        for i, data in enumerate(self.dataSet):
+            datasWithEucli.append( [data.label, AllEuclideanDistances[i]] )
+        datasWithEucli = sorted(datasWithEucli, key=lambda d : d[1])
+        datasWithEucli.pop(0)
+        #Ahora en la lista resultado 
+        #primero guardamos el punto, luego las etiquetas
+        #de los 10 más cercanos basandonos en la lista datasWithEucli
+        ListNeighbors = []
+        ListNeighbors.append(point)
+        for cont, data in enumerate(datasWithEucli):
+            dataLabel = data[0]
+            ListNeighbors.append(dataLabel)
+            if cont > 9 :
+                break
+            else:
+                cont=cont+1
+        return ListNeighbors
+
     def findNeighbors(self, GridPoint) -> List[Any]:
         #get all euclidian distances
         AllEuclideanDistances : List[float]  = [

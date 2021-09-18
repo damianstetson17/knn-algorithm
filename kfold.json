@@ -1,0 +1,14 @@
+{
+    "Lista":[
+
+        {"Punto": ["x","y","label"]},
+        {"Proximos": [
+            ["x","y","label"],
+            ["x","y","label"],
+            ["x","y","label"],
+            ["x","y","label"],
+            ["x","y","label"]
+        ]}
+        
+    ]
+}
