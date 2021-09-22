@@ -115,6 +115,7 @@ class Knn:
         fig.suptitle(f"KNN con K={self.kNeighborsNumber}")
         GridAndData = fig.add_subplot(121)
         Grid = fig.add_subplot(122)
+
         #plot grid
         GridAndData.scatter(grid_x,grid_y,
                     c = NeighborsListLabel,
@@ -151,4 +152,6 @@ class Knn:
         GridAndData.legend(loc='upper center',
                    bbox_to_anchor=(0.5, -0.05),
                    fancybox=True, shadow=True, ncol=5)
+                  
+        plt.ion()
         plt.show()

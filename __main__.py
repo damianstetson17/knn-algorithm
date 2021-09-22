@@ -2,13 +2,82 @@
 # pip install matplotlib
 
 from knn import Knn
+from tkinter import *
 from csv import reader
-from typing import Counter, List
+from typing import Counter
 from model.data import Data
-import operator
+import tkinter.messagebox
+from threading import Thread
 
-def main ():
-    with open('./dataSets/aggregation.txt', 'r') as read_dataSet:
+pathDataSetFile = "Not selected."
+KNumber = 1
+KFoldResults = []
+
+def GUI ():
+    global KNumber
+    global pathDataSetFile
+    root = Tk()
+    root.title("Main Menú - KNN - Stetson & Piotroski")
+    #initial values for start the algorithm
+    frame_values_selected = LabelFrame(root, text="SELECTED VALUES", padx=65,pady=71.5)
+    frame_values_selected.grid(row=1, column=1)
+    label_data_set_path = Label(frame_values_selected, text="DATA SET path file: "+pathDataSetFile)
+    label_data_set_path.pack()
+    #number k label
+    label_clusters = Label(frame_values_selected, text="Number of k selected: "+str(KNumber))
+    label_clusters.pack()
+    #start the K algorithm button
+    button_start_K = Button(frame_values_selected,text="START K ALGORITHM", command=startButton)
+    button_start_K.pack()
+
+    #inputs frame
+    frame_inputs = LabelFrame(root, text="INITIAL VALUES", padx=50,pady=50)
+    frame_inputs.grid(row=1, column=0)
+    button_select_data_set = Button(frame_inputs, text = "Select DATA SET .txt file", width=25,
+                                        command = lambda: setPathFile(label_data_set_path))
+    button_select_data_set.pack()
+
+    #k scale
+    k_scale_input = Scale(frame_inputs, label="Select the number of K:", 
+                            from_=1, to=10, orient=HORIZONTAL, length=200,
+                            command = lambda a: setKNumber(a,label_clusters))
+    k_scale_input.set(KNumber)
+    k_scale_input.pack()
+
+    #KFoldResultlabel = Label(root, text="\n".join(map(str, yourlist)))
+    root.mainloop()
+
+def setPathFile(label_data_set_path):
+    global pathDataSetFile
+    from tkinter import filedialog
+    pathDataSetFile = filedialog.askopenfilename(title="Select a data set",
+                                                filetypes = (("text files","*.txt"),("all files","*.*")))
+    label_data_set_path.config(text="DATA SET path file: "+pathDataSetFile)
+
+def setKNumber(val,label_clusters):
+        global KNumber
+        KNumber=val
+       #print(f"Number of clusters selected: {self.clustersNumber}")
+        label_clusters.config(text="Number of clusters selected: "+str(KNumber))
+
+def startButton():
+    if pathDataSetFile != "Not selected.":
+        if pathDataSetFile != "":
+            startKAlgorithm()
+        else:
+            tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
+    else:
+        tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
+
+def startKAlgorithm():
+    global KNumber
+    global pathDataSetFile
+    global KFoldResults
+
+    #parse to int from GUI
+    KNumber = int(KNumber)
+
+    with open(pathDataSetFile, 'r') as read_dataSet:
         DataSet : List[Data] = []
         csv_reader = reader(read_dataSet)
 
@@ -40,14 +109,13 @@ def main ():
 
 
     #start algorithm
-    knnAlgorithm = Knn(DataSet,8)  
+    knnAlgorithm = Knn(DataSet,KNumber)  
     PuntosConEtiquetasDevecinos = []
-    KFoldResults = []
 
     #cargamos la tabla en horizontal de cada punto con sus 9 vecinos
     for data in DataSet:
         PuntosConEtiquetasDevecinos.append(knnAlgorithm.findKFoldNeighbors(data)) 
-    print(f"los puntos con sus vecinos {PuntosConEtiquetasDevecinos}\t")
+    
     #contador de acuertos para los k-fold
     correctCount = 0
     #Desde k=1 hasta 10
@@ -78,7 +146,12 @@ def main ():
     
     #plot
     knnAlgorithm.GenerateGrid()
-        
+
+    #show results popUp
+    tkinter.messagebox.showinfo(title='K-Fold Validation:', message="\n".join(map(str, KFoldResults))) 
+
+def main ():
+    GUI()     
 
 if __name__ == '__main__':
     main()
