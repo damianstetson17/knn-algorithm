@@ -3,7 +3,6 @@ import numpy
 from data import Data
 from typing import Any, List
 import matplotlib.pyplot as plt
-from operator import itemgetter
 
 class Knn:
     def __init__(self, dataSet: List[Data], kNeighborsNumber: int) -> None:

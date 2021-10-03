@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox
-import __main__
+import main
 
 pathDataSetFile = "Not selected."
 KNumber = 1
@@ -67,7 +67,7 @@ def setKNumber(val,label_clusters):
 def startButton():
     if pathDataSetFile != "Not selected.":
         if pathDataSetFile != "":
-            __main__.startKAlgorithm()
+            main.startKAlgorithm()
         else:
             tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
