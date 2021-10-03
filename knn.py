@@ -40,6 +40,7 @@ class Knn:
         for i, data in enumerate(self.dataSet):
             datasWithEucli.append( [data.label, AllEuclideanDistances[i]] )
         datasWithEucli = sorted(datasWithEucli, key=lambda d : d[1])
+        #sacamos el primero que seria la distancia consigo mismo
         datasWithEucli.pop(0)
         #Ahora en la lista resultado 
         #primero guardamos el punto, luego las etiquetas
