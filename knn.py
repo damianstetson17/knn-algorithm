@@ -1,6 +1,6 @@
 import math
 import numpy
-from model.data import Data
+from data import Data
 from typing import Any, List
 import matplotlib.pyplot as plt
 from operator import itemgetter

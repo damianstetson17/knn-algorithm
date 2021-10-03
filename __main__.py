@@ -2,12 +2,11 @@
 # pip install matplotlib
 
 from knn import Knn
+from data import Data
 from tkinter import *
 from csv import reader
-from typing import Counter
-from model.data import Data
 import tkinter.messagebox
-from threading import Thread
+from typing import Counter, List
 
 pathDataSetFile = "Not selected."
 KNumber = 1
@@ -25,7 +24,7 @@ def GUI ():
     label_data_set_path.pack()
     #number k label
     label_clusters = Label(frame_values_selected, text="Number of k selected: "+str(KNumber))
-    label_clusters.pack()
+    label_clusters.pack(pady=10)
     #start the K algorithm button
     button_start_K = Button(frame_values_selected,text="START K ALGORITHM", command=startButton)
     button_start_K.pack()
@@ -42,11 +41,12 @@ def GUI ():
                             from_=1, to=10, orient=HORIZONTAL, length=200,
                             command = lambda a: setKNumber(a,label_clusters))
     k_scale_input.set(KNumber)
-    k_scale_input.pack()
+    k_scale_input.pack(pady=20)
 
     #KFoldResultlabel = Label(root, text="\n".join(map(str, yourlist)))
     root.mainloop()
 
+"""START GUI BUTTONS FUNCIONS"""
 def setPathFile(label_data_set_path):
     global pathDataSetFile
     from tkinter import filedialog
@@ -58,7 +58,7 @@ def setKNumber(val,label_clusters):
         global KNumber
         KNumber=val
        #print(f"Number of clusters selected: {self.clustersNumber}")
-        label_clusters.config(text="Number of clusters selected: "+str(KNumber))
+        label_clusters.config(text="Number of K selected: "+str(KNumber))
 
 def startButton():
     if pathDataSetFile != "Not selected.":
@@ -68,6 +68,7 @@ def startButton():
             tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
         tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
+"""END GUI BUTTONS FUNCIONS"""
 
 def startKAlgorithm():
     global KNumber
