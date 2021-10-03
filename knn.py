@@ -152,6 +152,5 @@ class Knn:
         GridAndData.legend(loc='upper center',
                    bbox_to_anchor=(0.5, -0.05),
                    fancybox=True, shadow=True, ncol=5)
-                  
-        plt.ion()
+                   
         plt.show()
