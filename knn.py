@@ -149,7 +149,7 @@ class Knn:
         Grid.set_title('Grilla')
         Grid.set_xlabel('Eje x')
         Grid.set_ylabel('Eje y')
-        fig.canvas.set_window_title('Inteligencia Artificial II - Gráfico KNN')
+        fig.canvas.manager.set_window_title('Inteligencia Artificial II - Gráfico KNN')
         GridAndData.legend(loc='upper center',
                    bbox_to_anchor=(0.5, -0.05),
                    fancybox=True, shadow=True, ncol=5)
