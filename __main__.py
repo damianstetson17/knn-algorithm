@@ -1,9 +1,11 @@
 # pip install numpy
 # pip install matplotlib
 
+import time
 from knn import Knn
 from data import Data
 from tkinter import *
+from tkinter import ttk
 from csv import reader
 import tkinter.messagebox
 from typing import Counter, List
@@ -11,22 +13,32 @@ from typing import Counter, List
 pathDataSetFile = "Not selected."
 KNumber = 1
 KFoldResults = []
+root = Tk()
+frame_values_selected = LabelFrame(root, text="SELECTED VALUES", padx=65,pady=71.5)
+
+#number k table label
+kfold_results_table = ttk.Treeview(frame_values_selected, columns=("#1","#2"), show="headings")
+kfold_results_table.heading("#1", text="K Value",anchor=N)
+kfold_results_table.heading("#2", text="Success",anchor=N)
+kfold_results_table.column("#1",anchor=N)
+kfold_results_table.column("#2",anchor=N)
 
 def GUI ():
     global KNumber
     global pathDataSetFile
-    root = Tk()
+    
     root.title("Main Menú - KNN - Stetson & Piotroski")
     #initial values for start the algorithm
-    frame_values_selected = LabelFrame(root, text="SELECTED VALUES", padx=65,pady=71.5)
     frame_values_selected.grid(row=1, column=1)
     label_data_set_path = Label(frame_values_selected, text="DATA SET path file: "+pathDataSetFile)
     label_data_set_path.pack()
     #number k label
     label_clusters = Label(frame_values_selected, text="Number of k selected: "+str(KNumber))
     label_clusters.pack(pady=10)
+    
     #start the K algorithm button
-    button_start_K = Button(frame_values_selected,text="START K ALGORITHM", command=startButton)
+    button_start_K = Button(frame_values_selected,text="START K ALGORITHM",
+                            command=startButton)
     button_start_K.pack()
 
     #inputs frame
@@ -140,16 +152,28 @@ def startKAlgorithm():
                 if EtiquetaMasRepetida == Punto.label:
                     correctCount = correctCount+1
             ocurrenciasDeMaxValRep = 0
-        KFoldResults.append(f"Para k={k} hay {correctCount} aciertos")
+        KFoldResults.append((k,correctCount))
         correctCount = 0
+    
+    print(f"la tabla al principio tiene: {len(kfold_results_table.get_children())}")
+    kfold_results_table.delete(*kfold_results_table.get_children())
+    for r in kfold_results_table.get_children():
+        root.kfold_results_table.delete(r)
+    root.update()
+    root.update_idletasks()
+    print(f"la tabla luego de .delete() tiene: {len(kfold_results_table.get_children())}")
     for Kinfo in KFoldResults:
-        print(f"{Kinfo}\t")
+        #print(f"{Kinfo}\t")
+        #kfold_results_table.insert(parent="", index='end',iid=0, text="hola",values=(Kinfo))
+        kfold_results_table.insert("", 'end', values=Kinfo)
+    print(f"la tabla luego del for de Kinfo: {len(kfold_results_table.get_children())}")
+    kfold_results_table.pack(pady=10)
     
     #plot
     knnAlgorithm.GenerateGrid()
 
     #show results popUp
-    tkinter.messagebox.showinfo(title='K-Fold Validation:', message="\n".join(map(str, KFoldResults))) 
+    #tkinter.messagebox.showinfo(title='K-Fold Validation:', message="\n".join(map(str, KFoldResults))) 
 
 def main ():
     GUI()     
