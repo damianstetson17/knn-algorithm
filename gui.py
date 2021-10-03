@@ -1,10 +1,12 @@
+import main
+import mezclador
 from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox
-import main
 
 pathDataSetFile = "Not selected."
 KNumber = 1
+percentShuffle = 100
 root = Tk()
 frame_values_selected = LabelFrame(root, text="SELECTED VALUES", padx=65,pady=71.5)
 
@@ -40,12 +42,22 @@ def generate_main_menu ():
                                         command = lambda: setPathFile(label_data_set_path))
     button_select_data_set.pack()
 
+    button_shuffle = Button(frame_inputs, text = "Generate a shuffle", width=25,
+                                        command = lambda: generateSuffle(pathDataSetFile, percentShuffle))
+    button_shuffle.pack(pady=5)
+    #percent scale
+    percent_input = Scale(frame_inputs, label="Select a percent of data in dataset for the shuffler:", 
+                            from_=1, to=100, orient=HORIZONTAL, length=200,
+                            command = lambda p: setPercent(p))
+    percent_input.set(percentShuffle)
+    percent_input.pack(pady=10)
+
     #k scale
     k_scale_input = Scale(frame_inputs, label="Select the number of K:", 
                             from_=1, to=10, orient=HORIZONTAL, length=200,
                             command = lambda a: setKNumber(a,label_clusters))
     k_scale_input.set(KNumber)
-    k_scale_input.pack(pady=20)
+    k_scale_input.pack(pady=10)
 
     #KFoldResultlabel = Label(root, text="\n".join(map(str, yourlist)))
     root.mainloop()
@@ -72,4 +84,16 @@ def startButton():
             tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
         tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
-"""END GUI BUTTONS FUNCIONS"""
+
+def generateSuffle(pathDataSetFile, percentShuffle):
+    if pathDataSetFile != "Not selected.":
+        if pathDataSetFile != "":
+            mezclador.generateShuffle(pathDataSetFile, float(percentShuffle))
+        else:
+            tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Debe colocar un número de porcentaje y elegir el dataset')
+    else:
+        tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Debe colocar un número de porcentaje y elegir el dataset')
+
+def setPercent(val):
+    global percentShuffle
+    percentShuffle = val
