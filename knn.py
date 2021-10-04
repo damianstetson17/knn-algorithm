@@ -49,10 +49,6 @@ class Knn:
         for cont, data in enumerate(datasWithEucli):
             dataLabel = data[0]
             ListNeighbors.append(dataLabel)
-            if cont > 9 :
-                break
-            else:
-                cont=cont+1
         return ListNeighbors
 
     def findNeighbors(self, GridPoint) -> List[Any]:
@@ -120,7 +116,7 @@ class Knn:
         GridAndData.scatter(grid_x,grid_y,
                     c = NeighborsListLabel,
                     alpha = 0.4,
-                    cmap= "Set1",
+                    cmap= "tab20",
                     marker="s",
                     label="Grilla")
 
@@ -129,7 +125,7 @@ class Knn:
                     [data.y for data in self.dataSet],
                     c = [data.label for data in self.dataSet],
                     alpha = 0.9,
-                    cmap= "Set1",
+                    cmap= "tab20",
                     marker="x",
                     label="Data Set",
                     linewidths=5,
@@ -139,7 +135,7 @@ class Knn:
                     numpy.asarray(NeighborsListLabel).reshape(grid_x.shape),
                     shading="auto",
                     alpha = 1,
-                    cmap= "Set1")
+                    cmap= "tab20")
 
         plt.title(f"KNN con K={self.kNeighborsNumber}")
 

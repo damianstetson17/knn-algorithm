@@ -4,10 +4,9 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox
 
-pathDataSetFile = "Not selected."
-KNumber = 1
-percentShuffle = 100
 root = Tk()
+KNumber = 1
+pathDataSetFile = "Not selected."
 frame_values_selected = LabelFrame(root, text="SELECTED VALUES", padx=65,pady=71.5)
 
 #number k table label
@@ -31,9 +30,13 @@ def generate_main_menu ():
     label_clusters.pack(pady=10)
     
     #start the K algorithm button
-    button_start_K = Button(frame_values_selected,text="START K ALGORITHM",
-                            command=startButton)
-    button_start_K.pack()
+    button_start_K = Button(frame_values_selected,text="START KNN ALGORITHM",
+                            command=startKNNButton)
+    button_start_K.pack(pady=10)
+    #start the K algorithm button
+    button_start_K = Button(frame_values_selected,text="START KFOLDVALIDATION ALGORITHM",
+                            command=startKFoldButton)
+    button_start_K.pack(pady=10)
 
     #inputs frame
     frame_inputs = LabelFrame(root, text="INITIAL VALUES", padx=50,pady=50)
@@ -43,14 +46,8 @@ def generate_main_menu ():
     button_select_data_set.pack()
 
     button_shuffle = Button(frame_inputs, text = "Generate a shuffle", width=25,
-                                        command = lambda: generateSuffle(pathDataSetFile, percentShuffle))
+                                        command = lambda: generateSuffle(pathDataSetFile))
     button_shuffle.pack(pady=5)
-    #percent scale
-    percent_input = Scale(frame_inputs, label="Select a percent of data in dataset for the shuffler:", 
-                            from_=1, to=100, orient=HORIZONTAL, length=200,
-                            command = lambda p: setPercent(p))
-    percent_input.set(percentShuffle)
-    percent_input.pack(pady=10)
 
     #k scale
     k_scale_input = Scale(frame_inputs, label="Select the number of K:", 
@@ -76,24 +73,29 @@ def setKNumber(val,label_clusters):
        #print(f"Number of clusters selected: {self.clustersNumber}")
         label_clusters.config(text="Number of K selected: "+str(KNumber))
 
-def startButton():
+def startKNNButton():
     if pathDataSetFile != "Not selected.":
         if pathDataSetFile != "":
-            main.startKAlgorithm()
+            main.startKnn()
         else:
             tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
         tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
 
-def generateSuffle(pathDataSetFile, percentShuffle):
+def startKFoldButton():
     if pathDataSetFile != "Not selected.":
         if pathDataSetFile != "":
-            mezclador.generateShuffle(pathDataSetFile, float(percentShuffle))
+            main.startKFold()
         else:
-            tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Debe colocar un número de porcentaje y elegir el dataset')
+            tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
-        tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Debe colocar un número de porcentaje y elegir el dataset')
+        tkinter.messagebox.showerror('ERROR AL INTENTAR EJECUTAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
 
-def setPercent(val):
-    global percentShuffle
-    percentShuffle = val
+def generateSuffle(pathDataSetFile):
+    if pathDataSetFile != "Not selected.":
+        if pathDataSetFile != "":
+            mezclador.generateShuffle(pathDataSetFile)
+        else:
+            tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
+    else:
+        tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Primero debe seleccionar un DATASET antes de ejecutar')

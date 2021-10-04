@@ -28,8 +28,8 @@ def executeValidation(knnAlgorithm):
     
     #contador de acuertos para los k-fold
     correctCount = 0
-    #Desde k=1 hasta 10
-    for k in range(1,11):
+    #Desde k=1 hasta n-1
+    for k in range(1,len(PuntosConEtiquetasDevecinos)):
         #recorremos una columna y guardamos primero el punto cabecera,
         #y luego una lista de solo las etiquetas de sus vecinos
         for PuntoConVecinos in PuntosConEtiquetasDevecinos:
@@ -52,8 +52,15 @@ def executeValidation(knnAlgorithm):
         KFoldResults.append((k,correctCount))
         correctCount = 0
     
+    KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d[1])
+    maximo = KFoldResults[0]
+    toShow = []
+    for KFold in KFoldResults:
+        if KFold[1] == maximo[1]:
+            toShow.append(KFold)
+
     #Cargamos la tabla con los resultados de Kfold
     gui.kfold_results_table.delete(*gui.kfold_results_table.get_children())
-    for Kinfo in KFoldResults:
-        gui.kfold_results_table.insert("", 'end', values=Kinfo)
+    for bettersKinfo in toShow:
+        gui.kfold_results_table.insert("", 'end', values=bettersKinfo)
     gui.kfold_results_table.pack(pady=10)
