@@ -10,7 +10,7 @@ from typing import List
 
 def startKFold():
     #parse to int from GUI input
-    KNumber = int(gui.KNumber)
+    KNumber:int = int(gui.KNumber)
 
     #read from .txt dataset
     with open(gui.pathDataSetFile, 'r') as read_dataSet:
@@ -28,14 +28,14 @@ def startKFold():
             )
     
     #Instace of a KNN object 
-    knnAlgorithm = Knn(DataSet,KNumber)
+    knnAlgorithm:Knn = Knn(DataSet,KNumber)
 
     #Exec the Kfold validation
     kfoldvalidation.executeValidation(knnAlgorithm)
 
 def startKnn():
     #parse to int from GUI input
-    KNumber = int(gui.KNumber)
+    KNumber:int = int(gui.KNumber)
 
     #read from .txt dataset
     with open(gui.pathDataSetFile, 'r') as read_dataSet:
@@ -52,7 +52,7 @@ def startKnn():
                 )
             )
             
-    knnAlgorithm = Knn(DataSet,KNumber)
+    knnAlgorithm:Knn = Knn(DataSet,KNumber)
     #Execute KNN algorithm and generate the grid
     knnAlgorithm.GenerateGrid()
 

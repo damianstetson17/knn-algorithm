@@ -3,7 +3,7 @@ from csv import reader
 from typing import List
 import tkinter.messagebox
 
-def generateShuffle(pathDataSetFile: str):
+def generateShuffle(pathDataSetFile: str) -> None:
     dataListRow:List[str] = []
     with open(pathDataSetFile, 'r') as read_dataSet:
             csv_reader = reader(read_dataSet)
