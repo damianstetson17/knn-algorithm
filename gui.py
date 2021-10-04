@@ -1,5 +1,5 @@
 import main
-import mezclador
+import mixer_tool
 from tkinter import *
 from tkinter import ttk
 import tkinter.messagebox
@@ -94,7 +94,7 @@ def startKFoldButton():
 def generateSuffle(pathDataSetFile):
     if pathDataSetFile != "Not selected.":
         if pathDataSetFile != "":
-            mezclador.generateShuffle(pathDataSetFile)
+            mixer_tool.generateShuffle(pathDataSetFile)
         else:
             tkinter.messagebox.showerror('ERROR AL INTENTAR MEZCLAR', 'Primero debe seleccionar un DATASET antes de ejecutar')
     else:
