@@ -1,4 +1,5 @@
 import gui
+import numpy
 from typing import Counter
 import matplotlib.pyplot as plt
 
@@ -63,7 +64,10 @@ def executeValidation(knnAlgorithm):
     plt.title("K Fold Validation")
     plt.xlabel('K Number')
     plt.ylabel('K Accurancy')
-    
+    # x_range = numpy.arange(min(xList)-1, max(xList)+1, 5)
+    # y_range = numpy.arange(min(yList)-1, max(yList)+1, 5)
+    # plt.xticks(x_range)
+    # plt.yticks(y_range)
 
     KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d[1])
     maximo = KFoldResults[0]
@@ -72,9 +76,10 @@ def executeValidation(knnAlgorithm):
         if KFold[1] == maximo[1]:
             toShow.append(KFold)
 
-    plt.annotate('Most Acurrate', xy=(maximo[0], maximo[1]), xytext=(maximo[0]/2, maximo[1]/2),
-             arrowprops=dict(facecolor='black',arrowstyle="->"),
-             )
+    plt.annotate(f'Most Acurrate ({maximo[0]};{maximo[1]})',
+                xy=(maximo[0], maximo[1]),
+                xytext=(maximo[0], maximo[1]/2),
+                arrowprops=dict(facecolor='black', arrowstyle="->"))
 
     #Cargamos la tabla con los resultados de Kfold
     gui.kfold_results_table.delete(*gui.kfold_results_table.get_children())
