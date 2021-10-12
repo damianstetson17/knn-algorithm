@@ -1,6 +1,6 @@
 import gui
 import numpy
-from typing import Counter
+from typing import Any, Counter, List
 import matplotlib.pyplot as plt
 
 """
@@ -54,23 +54,27 @@ def executeValidation(knnAlgorithm):
         KFoldResults.append({"k":k, "accuracy":correctCount})
         correctCount = 0
     
-    xList = []
-    yList = []
-    for KFold in KFoldResults:
-        xList.append(KFold["k"])
-        yList.append(KFold["accuracy"])
+    #PLOT AND GUI TABLE FUNCTIONS
+    xList:List[int] = [x["k"] for x in KFoldResults]
+    yList:List[int] = [y["accuracy"] for y in KFoldResults]
+    # for KFold in KFoldResults:
+    #     xList.append(KFold["k"])
+    #     yList.append(KFold["accuracy"])
     
+    KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d["accuracy"])
+    maximo = KFoldResults[0]
+
     plt.plot(xList,yList,'r--')
-    plt.title("K Fold Validation")
+    plt.title(f"K Fold Validation ({maximo['k']},{maximo['accuracy']})")
     plt.xlabel('K Number')
     plt.ylabel('K accuracy')
 
-    KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d["accuracy"])
-    maximo = KFoldResults[0]
-    toShow = []
+    toShow:List[Any] = []
     for KFold in KFoldResults:
         if KFold["accuracy"] == maximo["accuracy"]:
             toShow.append([KFold["k"],KFold["accuracy"]])
+
+    plt.plot(maximo["k"], maximo["accuracy"], color='green', marker="x")
 
     plt.annotate(f'Most Acurrate ({maximo["k"]};{maximo["accuracy"]})',
                 xy=(maximo["k"], maximo["accuracy"]),

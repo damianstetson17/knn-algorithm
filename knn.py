@@ -16,18 +16,18 @@ class Knn:
                         ),2)
     
     def findMinInDataSet(self) -> Data:
-        xArrayPoints = [d.x for d in self.dataSet]
-        yArrayPoints = [d.y for d in self.dataSet]
+        xArrayPoints:List[float] = [d.x for d in self.dataSet]
+        yArrayPoints:List[float] = [d.y for d in self.dataSet]
 
         return Data(min(xArrayPoints), min(yArrayPoints))
 
     def findMaxInDataSet(self) -> Data:
-        xArrayPoints = [d.x for d in self.dataSet]
-        yArrayPoints = [d.y for d in self.dataSet]
+        xArrayPoints:List[float] = [d.x for d in self.dataSet]
+        yArrayPoints:List[float] = [d.y for d in self.dataSet]
 
         return Data(max(xArrayPoints), max(yArrayPoints))
 
-    def findKFoldNeighbors(self, point:Data) -> List[Any]:
+    def findKFoldNeighbors(self, point:Data) -> Any:
         AllEuclideanDistances : List[float]  = [self.euclideanDist(point.x,
                                                                    point.y,
                                                                    data.x,
@@ -35,7 +35,7 @@ class Knn:
         
         #Unimos las distancias euclidianas de cada punto
         #con su label y ordenamos por menor eucdist
-        datasWithEucli = []
+        datasWithEucli:List[Any] = []
         for i, data in enumerate(self.dataSet):
             datasWithEucli.append({
                                     "neighbor_label":data.label,
@@ -47,10 +47,10 @@ class Knn:
         #Ahora en la lista resultado 
         #primero guardamos el punto, luego las etiquetas
         #de los más cercanos basandonos en la lista datasWithEucli
-        ListNeighbors = []
+        ListNeighbors:List[int] = []
         for data in datasWithEucli:
-            neighborLabel = data["neighbor_label"]
-            ListNeighbors.append(neighborLabel)
+            ListNeighbors.append(data["neighbor_label"])
+
         return ({
                     "point": point,
                     "neighbors_label_list":ListNeighbors
@@ -65,7 +65,7 @@ class Knn:
         # eucResult[2,7]
         # and we need to convert into this:
         # datasWithEucli = ([data.x, data.y ,data.label, eucDist=2],[...])
-        datasWithEucli = []
+        datasWithEucli:List[Any] = []
         i=0
         for data in self.dataSet:
             datasWithEucli.append( 
@@ -88,17 +88,17 @@ class Knn:
         
         for i in List:
             curr_frequency = List.count(i)
-            if(curr_frequency> counter):
+            if(curr_frequency > counter):
                 counter = curr_frequency
                 num = i
         return num
 
     def DefineLabel(self, point) -> int:
-        Neighbors : List[Any] = self.findNeighbors(point)
-        labelsExist = [n["label"] for n in Neighbors]
+        Neighbors:List[Any] = self.findNeighbors(point)
+        labelsExist:List[int] = [n["label"] for n in Neighbors]
         return self.most_frequent(labelsExist)
 
-    def GenerateGrid(self) -> Any:
+    def GenerateGrid(self) -> None:
         #find the min & max
         CoordMinData :Data  = self.findMinInDataSet()
         CoordMaxData :Data  = self.findMaxInDataSet()
@@ -134,7 +134,7 @@ class Knn:
                     c = [data.label for data in self.dataSet],
                     alpha = 0.9,
                     cmap= "tab20",
-                    marker="x",
+                    marker="X",
                     label="Data Set",
                     linewidths=5,
                     linewidth=3)
