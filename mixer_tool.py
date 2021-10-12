@@ -13,7 +13,7 @@ def generateShuffle(pathDataSetFile: str) -> None:
             
             random.shuffle(dataListRow)
             filename:str= read_dataSet.name.split("/")[-1]
-            newSufflefilename:str= f'./datasets/mixed_{filename}'
+            newSufflefilename:str= f'.\knn-algorithm\datasets\mixed_{filename}'
 
             with open(newSufflefilename, 'w') as f:
                 for i,r in enumerate(dataListRow):

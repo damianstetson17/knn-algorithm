@@ -35,10 +35,10 @@ def executeValidation(knnAlgorithm):
         #recorremos una columna y guardamos primero el punto cabecera,
         #y luego una lista de solo las etiquetas de sus vecinos
         for PuntoConVecinos in PuntosConEtiquetasDevecinos:
-            Punto = PuntoConVecinos[0]
-            EtiquetasDeVecinos = []
-            for i in range(1,k+1):
-                EtiquetasDeVecinos.append(PuntoConVecinos[i])
+            Punto = PuntoConVecinos["point"]
+            EtiquetasDeVecinos = PuntoConVecinos["neighbors_label_list"][:k]
+            # for i in range(1,k+1):
+            #     EtiquetasDeVecinos.append(PuntoConVecinos[i])
             #Contamos las cantidades de cada etiqueta
             cantidadesEtiquetas = Counter(EtiquetasDeVecinos)
             EtiquetaMasRepetida = max(cantidadesEtiquetas,key=cantidadesEtiquetas.get)
@@ -51,34 +51,30 @@ def executeValidation(knnAlgorithm):
                 if EtiquetaMasRepetida == Punto.label:
                     correctCount = correctCount+1
             ocurrenciasDeMaxValRep = 0
-        KFoldResults.append((k,correctCount))
+        KFoldResults.append({"k":k, "accuracy":correctCount})
         correctCount = 0
     
     xList = []
     yList = []
     for KFold in KFoldResults:
-        xList.append(KFold[0])
-        yList.append(KFold[1])
+        xList.append(KFold["k"])
+        yList.append(KFold["accuracy"])
     
     plt.plot(xList,yList,'r--')
     plt.title("K Fold Validation")
     plt.xlabel('K Number')
-    plt.ylabel('K Accurancy')
-    # x_range = numpy.arange(min(xList)-1, max(xList)+1, 5)
-    # y_range = numpy.arange(min(yList)-1, max(yList)+1, 5)
-    # plt.xticks(x_range)
-    # plt.yticks(y_range)
+    plt.ylabel('K accuracy')
 
-    KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d[1])
+    KFoldResults = sorted(KFoldResults, reverse=True, key=lambda d : d["accuracy"])
     maximo = KFoldResults[0]
     toShow = []
     for KFold in KFoldResults:
-        if KFold[1] == maximo[1]:
-            toShow.append(KFold)
+        if KFold["accuracy"] == maximo["accuracy"]:
+            toShow.append([KFold["k"],KFold["accuracy"]])
 
-    plt.annotate(f'Most Acurrate ({maximo[0]};{maximo[1]})',
-                xy=(maximo[0], maximo[1]),
-                xytext=(maximo[0], maximo[1]/2),
+    plt.annotate(f'Most Acurrate ({maximo["k"]};{maximo["accuracy"]})',
+                xy=(maximo["k"], maximo["accuracy"]),
+                xytext=(maximo["k"], maximo["accuracy"]/2),
                 arrowprops=dict(facecolor='black', arrowstyle="->"))
 
     #Cargamos la tabla con los resultados de Kfold

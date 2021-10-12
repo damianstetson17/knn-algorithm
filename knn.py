@@ -37,26 +37,29 @@ class Knn:
         #con su label y ordenamos por menor eucdist
         datasWithEucli = []
         for i, data in enumerate(self.dataSet):
-            datasWithEucli.append( [data.label, AllEuclideanDistances[i]] )
-        datasWithEucli = sorted(datasWithEucli, key=lambda d : d[1])
+            datasWithEucli.append({
+                                    "neighbor_label":data.label,
+                                    "euclidean_distance":AllEuclideanDistances[i]
+                                })
+        datasWithEucli = sorted(datasWithEucli, key = lambda d : d["euclidean_distance"])
         #sacamos el primero que seria la distancia consigo mismo
         datasWithEucli.pop(0)
         #Ahora en la lista resultado 
         #primero guardamos el punto, luego las etiquetas
-        #de los 10 más cercanos basandonos en la lista datasWithEucli
+        #de los más cercanos basandonos en la lista datasWithEucli
         ListNeighbors = []
-        ListNeighbors.append(point)
-        for cont, data in enumerate(datasWithEucli):
-            dataLabel = data[0]
-            ListNeighbors.append(dataLabel)
-        return ListNeighbors
+        for data in datasWithEucli:
+            neighborLabel = data["neighbor_label"]
+            ListNeighbors.append(neighborLabel)
+        return ({
+                    "point": point,
+                    "neighbors_label_list":ListNeighbors
+                })
 
     def findNeighbors(self, GridPoint) -> List[Any]:
         #get all euclidian distances
-        AllEuclideanDistances : List[float]  = [
-                                    self.euclideanDist(GridPoint[0],GridPoint[1], data.x, data.y)
-                                    for data in self.dataSet
-                                    ]
+        AllEuclideanDistances : List[float] =   [self.euclideanDist(GridPoint[0],GridPoint[1], data.x, data.y)
+                                                for data in self.dataSet]
         # we got this:
         # dataset[(x,y,lbl),(xx,yy,lbl2)]
         # eucResult[2,7]
@@ -65,16 +68,21 @@ class Knn:
         datasWithEucli = []
         i=0
         for data in self.dataSet:
-            datasWithEucli.append( [data.x, data.y, data.label, AllEuclideanDistances[i]] )
+            datasWithEucli.append( 
+                                {
+                                    "x":data.x,
+                                    "y":data.y,
+                                    "label":data.label,
+                                    "euclidean_distance":AllEuclideanDistances[i]
+                                })
             i=i+1
         
         #sort by most nearby eucDist
-        datasWithEucli = sorted(datasWithEucli, key=lambda d : d[3])
+        datasWithEucli = sorted(datasWithEucli, key=lambda d : d["euclidean_distance"])
         #get only the k number of Neighbors of that min euclidians
-        #print(f"Primeros {self.kNeighborsNumber} vecinos de [{GridPoint[0]},{GridPoint[1]}]: {datasWithEucli[:self.kNeighborsNumber]}")
         return datasWithEucli[:self.kNeighborsNumber]
 
-    def most_frequent(self,List) -> int:
+    def most_frequent(self, List) -> int:
         counter = 0
         num = List[0]
         
@@ -87,7 +95,7 @@ class Knn:
 
     def DefineLabel(self, point) -> int:
         Neighbors : List[Any] = self.findNeighbors(point)
-        labelsExist = [n[2] for n in Neighbors]
+        labelsExist = [n["label"] for n in Neighbors]
         return self.most_frequent(labelsExist)
 
     def GenerateGrid(self) -> Any:
