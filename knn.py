@@ -27,7 +27,7 @@ class Knn:
 
         return Data(max(xArrayPoints), max(yArrayPoints))
 
-    def findKFoldNeighbors(self, point:Data) -> Any:
+    def findKFoldNeighbors(self, point:Data) -> dict[int, list[float]]:
         AllEuclideanDistances : List[float]  = [self.euclideanDist(point.x,
                                                                    point.y,
                                                                    data.x,
@@ -35,7 +35,7 @@ class Knn:
         
         #Unimos las distancias euclidianas de cada punto
         #con su label y ordenamos por menor eucdist
-        datasWithEucli:List[Any] = []
+        datasWithEucli:List[dict[int, list[float]]] = []
         for i, data in enumerate(self.dataSet):
             datasWithEucli.append({
                                     "neighbor_label":data.label,
@@ -56,7 +56,7 @@ class Knn:
                     "neighbors_label_list":ListNeighbors
                 })
 
-    def findNeighbors(self, GridPoint) -> List[Any]:
+    def findNeighbors(self, GridPoint) -> List[dict[int, int, int, list[float]]]:
         #get all euclidian distances
         AllEuclideanDistances : List[float] =   [self.euclideanDist(GridPoint[0],GridPoint[1], data.x, data.y)
                                                 for data in self.dataSet]
