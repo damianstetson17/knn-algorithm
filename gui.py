@@ -45,9 +45,10 @@ def generate_main_menu ():
                                         command = lambda: setPathFile(label_data_set_path))
     button_select_data_set.pack()
 
-    button_shuffle = Button(frame_inputs, text = "Generate a shuffle", width=25,
-                                        command = lambda: generateSuffle(pathDataSetFile))
-    button_shuffle.pack(pady=5)
+    #Este btn solo es utilizado en desarrollo para el informe como generador de mezclas.
+    #button_shuffle = Button(frame_inputs, text = "Generate a shuffle", width=25,
+                                       # command = lambda: generateSuffle(pathDataSetFile))
+    #button_shuffle.pack(pady=5)
 
     #k scale
     k_scale_input = Scale(frame_inputs, label="Select the number of K:", 
